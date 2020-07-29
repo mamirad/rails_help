@@ -1,0 +1,3 @@
+Date.current.strftime("%Y/%m/%d")
+strftime("%d of %B, %Y")
+

@@ -1,0 +1,6 @@
+get '/newbook', to: 'books#new', as: 'newbook'
+post '/books', to: 'books#create'
+get '/showbook/:bookid', to: 'books#show', as: 'showbook'
+get '/allbooks', to: 'books#index', as: 'allbooks'
+get '/editbook/:bookid', to: 'books#edit'
+patch 'book/:bookid', to: 'books#update', as: 'book'

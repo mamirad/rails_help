@@ -1,0 +1,50 @@
+  validates :title, uniqueness: true
+  validates :content, length: { maximum: 140 }
+   validates_uniqueness_of :classname, scope: [:sectionname, :shiftname]
+
+  validates :classfee, numericality: { greater_than: 499 }
+  validates :name, presence: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :remind_at, date: { after_or_equal_to: Time.now, message: ' can not be  in Past .'}
+
+
+
+
+
+
+custom validation
+class Image < ActiveRecord::Base
+  validate :valid_file_name_extension
+
+  private
+
+  def valid_file_name_extension
+    if file_name.present? && !%w{.jpg .png .jpeg .tif}.include?(File.extname(file_name.downcase))
+      errors.add(:file_name, :invalid_extension)// ya yadd rakhana h here file_name is name of filed 
+    end
+  end
+end
+
+	
+
+
+
+
+
+class Event < ApplicationRecord
+  belongs_to :user
+  validate :event_start_date_cannot_be_in_the_past
+  validates :event_name, presence: true
+  validates :event_description, presence: true
+  validates :event_start_date, presence: true
+  
+  
+  def event_start_date_cannot_be_in_the_past
+    if self.event_start_date < Date.today
+      errors.add(:event_start_date, "can't be in the past")
+    end
+  end   
+end
+
+
+@event.user_id = current_user.id

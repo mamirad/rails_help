@@ -1,0 +1,6 @@
+how to generate scaffold with out view
+
+rails g scaffold book name:string author:string pages:integer price:float --skip-template-engine
+
+
+

@@ -1,0 +1,12 @@
+in layout
+
+<%= yield(:alert) %>
+
+
+in template
+
+<% content_for :alert do %>
+  <div class="alert alert-success">
+    You created multiple yield blocks!
+  </div>
+<% end %>

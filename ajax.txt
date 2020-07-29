@@ -1,0 +1,78 @@
+
+How to work with ajax
+
+
+routes are
+==================================================================================
+get 'search', to: 'cources#search'
+get 'searched', to: 'cources#searched'
+==================================================================================
+
+
+got to form
+====================================================================================
+<%= form_tag searched_path, remote: true, method: :get, id: "search form" do %>
+
+also make a div with id where your result ll be rendered
+
+
+
+====================================================================================
+after submit form
+===================================================================================
+define method in controller where you ll receive form params
+
+get the form params in this method  and use these params own desire
+
+past this in this controller method 
+
+respond_to do |format|
+            format.js{render partial: 'cources/abc'}
+
+end 
+=====================================================================================
+go to respected view directory here is cources
+====================================================================================
+add to file with same name with extention difference as example
+_abc.html.erb
+_abc.js.erb
+
+
+
+====================================================================================
+past the line in _abc.js.erb
+=====================================================================================
+
+
+$('#result').html("<%= j(render 'cources/abc.html')%>");
+
+result  is div having id define in form 
+
+the instance variable like @pqr = query
+in controller can be access in _abc.html.erb
+what we code write in this file will ber render to result div
+
+========================================================================================
+
+
+form submit with ajax
+	<%= form_tag search_stock_path, remote: true, method: :get, id: "stock-lookup-form" do %>
+then get form value with param in controller
+	params[:variable]
+load small div code name as partical code
+	respond_to do |format|
+	format.js{render partial: 'users/resultt'}
+	end
+...............................................................................
+respond_to do |format|
+  format.js { render :create1 }
+end
+Alternately, if you had a different path to it besides the default you could use:
+
+format.js { render :file => "/path/to/save.js.erb" }
+If it is a more dynamic requirement than this, you could always use string interpolation or "string".to_sym to render the desired view.
+..................................................................................
+
+
+
+

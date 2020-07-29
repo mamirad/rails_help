@@ -1,0 +1,13 @@
+begin  
+  raise 'A test exception.'  
+rescue StandardError => e  
+  puts e.message  
+  puts e.backtrace.inspect  
+end  
+
+begin 
+ActiveRecord::Base.transaction do
+end
+rescue Exception => e
+ActiveRecord::Rollback
+end

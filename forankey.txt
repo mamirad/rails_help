@@ -1,0 +1,1 @@
+belongs_to :classe, foreign_key: :classname, class_name: 'Classe'

@@ -1,0 +1,2 @@
+datetime.to_formatted_s(:long_ordinal) 
+ <td><%= (student_attendance.created_at+5.hours).strftime("%B %e, %Y at %I:%M %p") %></td>

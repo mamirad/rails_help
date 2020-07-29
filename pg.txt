@@ -1,0 +1,52 @@
+
+1
+sudo passwd postgres
+Create another role using “postgres”:
+Creating new role “dbrnd”. -p = set the password and -d = allow to create database.
+
+1
+sudo -u postgres createuser dbrnd -d -P
+
+
+
+to login pgsql
+ sudo -u postgres psql
+postgres=# ALTER USER postgres PASSWORD 'myPassword';
+
+
+
+
+grant priviledge to user
+
+sudo -u postgres psql -c 'alter user user1 with createdb' postgres
+
+
+
+
+how to install pg
+
+
+latest....
+    sudo apt update
+    sudo apt install postgresql postgresql-contrib
+sudo apt-get install libpq-dev
+
+resolve role not exist
+	sudo -u postgres createuser validsol
+
+resolve permission denied for create database
+
+7
+
+I was also facing this problem when I was doing setup of my Ruby on Rails app.Then,
+
+    sudo -u postgres psql
+
+    This will make you enter into psql shell.
+
+Once you enter your shell type:
+
+    ALTER USER username CREATEDB;
+
+In the place of username,you have to add your default system username in most of the cases.
+

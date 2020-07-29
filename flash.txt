@@ -1,0 +1,9 @@
+ <% flash.each do |name, msg| %>
+<div class="alert alert-success">
+<ul>
+
+<li style="color:black;"><%= msg %></li>
+
+</ul>
+</div>
+<% end %>

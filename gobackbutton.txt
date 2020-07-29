@@ -1,0 +1,2 @@
+<%= link_to 'Back', 'javascript:history.go(-1);' %>
+ redirect_back(fallback_location: root_path)

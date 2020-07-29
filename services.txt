@@ -1,0 +1,14 @@
+how to  use services in rails
+why we use services in rails
+to make controller smart  only
+
+
+
+create directory name as services in app folder
+create file in services with rb extention
+
+add this file in config/application.rb
+     config.autoload_paths += %W(#{config.root}/services)
+
+
+

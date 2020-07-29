@@ -1,0 +1,10 @@
+open folder where dump exist
+open terminal
+type sudo su
+then past this comand
+psql etyme_development < live_dump.sql
+
+how to download dump from pg
+
+sudo -u postgres pg_dump  database_name > filename
+

@@ -1,0 +1,4 @@
+how to install chromim driver
+
+
+sudo apt-get install chromium-chromedriver

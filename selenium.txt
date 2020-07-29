@@ -1,0 +1,18 @@
+click on button by class
+
+
+	require 'nokogiri'
+	require 'open-uri'
+	require 'selenium-webdriver'
+driver = Selenium::WebDriver.for :chrome
+ driver.get 'https://www.olx.com.pk/item/iphone-4s-available-100-original--iid-1005393561' 
+driver.find_element(:class, "_2pbD3").click
+
+
+agent = Mechanize.new
+@agent.get("https://www.olx.com.pk/item/iphone-4s-available-100-original--iid-1005393561#loginsms")
+
+
+
+
+driver.find_element(:name, "phone").send_keys("03454190038")

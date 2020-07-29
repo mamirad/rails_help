@@ -1,0 +1,71 @@
+Image Upload - Text directions and code
+
+Add the following gems to your gemfile:
+
+	gem 'carrierwave'
+
+	gem 'mini_magick'
+
+	gem 'fog'
+
+Then run bundle install --without production
+
+Generate the Image resource:
+
+	rails generate scaffold Image name:string picture:string user:references
+
+Run the migration to create the images table:
+
+	rake db:migrate
+To generate an uploader:
+
+	rails generate uploader Picture
+
+Add the following line to your image.rb model file to associate images with picture:
+
+	mount_uploader :picture, PictureUploader   // picture is name of colum in database
+
+Pull up the _form.html.erb partial under app/views/images folder and update it to make it look like below:
+
+
+   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:multipart => true}) do |f|%>		
+<%= form_for @image, :html => { multipart: true, :class => "form-horizontal 			image" } do |f| %>
+  <%= form_tag delivered_path, method: :post, id: "asignproject" ,multipart: true do %>		
+<%= form_tag({action: :upload}, multipart: true) do %>
+		<%= f.file_field :picture, accept: 'image/jpeg,image/gif,image/png' %>
+  <%= file_field_tag 'picture' %>
+
+
+
+show image at show.html.erb
+		<%= image_tag(@image.picture.url, size: "300x300") if @image.picture? %>
+
+
+
+
+
+-----------------reduce image size while uploading ----------------------
+class FileUploader < CarrierWave::Uploader::Base
+  # Include RMagick or MiniMagick support:
+  # include CarrierWave::RMagick
+  # include CarrierWave::MiniMagick
+
+
+
+  include CarrierWave::MiniMagick # <-- Use this line, if you're using MiniMagick
+
+
+process :optimize_image
+
+  private
+
+  def optimize_image
+    manipulate! do |img|
+      img.quality 1
+      img
+    end
+  end
+
+
+
+-------------------------------------------------

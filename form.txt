@@ -1,0 +1,48 @@
+add class in form
+	<%= form_for(@user, :html => {class: "form-horizontal", role: "form"}) do 
+form tag
+	<%= form_tag "#", method: :get, id: "stock-lookup-form" do %>
+
+form tag text field
+ 	<%= text_field_tag :stock, params[:stock], 
+                                  placeholder: "Stock ticker symbol", autofocus: true,
+                                  class: "form-control search-box input-lg" %>
+form tag button
+	<%= button_tag(type: :submit, class: "btn btn-lg btn-success") do %>
+          <i class="fa fa-search"></i> Look up a stock
+        <% end %>
+
+
+
+     <%= button_tag 'Submit', class: 'btn btn-primary',
+                           data: { disable_with: "<i class='fa fa-refresh fa-spin'>
+      </i> Submitting Changes..."} %>
+
+
+
+
+
+dropdown select
+	 <%= f.select :section,['A', 'B'] ,{selected: 'value'},class:"form-control" ,:required => true, 			include_blank: false,include_hidden: false%>
+	<%= f.select :section, [["Jasmine", "jasmine"], ["Flower", "flower"],["Rose","rose"],["A","a"],["B","b"],["C","c"]] ,{},class:"form-control"%>
+    <%= select_tag(:type, options_for_select([['Jem', 1], ['Talos', 2]]))%>
+	select_tag 'job_departments', options_for_select(department_list), class: 'form-control', id: 'job_departments',include_blank: "Job Department List"
+    <%= select_tag 'user_id', options_for_select(User.all.collect{ |u| [u.name, u.id] })%>
+    = select_tag 'Job_titles', options_for_select(current_company.jobs.pluck("title").uniq,:selected=>params[:job_titles]),class: 'form-control',include_blank: "Select Job Title"
+
+<%= f.collection_select(:cls_name,Classe.order('name ASC').uniq,:name,:name,{include_blank: 'Select a Class'},{class: "form-control"}) %>
+	
+
+link url
+	<%= link_to "HOME",root_path, class: "color:red;" %>
+
+
+ <%= f.input :student_id, as: :hidden,  input_html: {:value => student.id }%>
+
+
+
+
+
+
+
+= select_tag "bank_names",options_for_select((BankDetail.where(company_id: current_company.id).collect{|u| [u.bank_name.titleize, u.id]})),{class: 'form-control select2 bank_names'}

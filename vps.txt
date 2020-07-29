@@ -1,0 +1,29 @@
+install live rbenv ruby
+rbenv install --verbose 2.1.2
+
+rename folder
+mv /home/user/oldname /home/user/newname
+
+
+Avatar Failed to manipulate with MiniMagick, maybe it is not an image? Original Error: ImageMagick/GraphicsMagick is not installed
+sol:
+sudo apt-get update
+sudo apt-get install imagemagick --fix-missing
+
+delete non empty folder ubunty
+rm -rf lampp
+
+log production site
+
+go to current and past
+tail -f log/production.log
+
+
+
+
+    You can turn on less secure apps option (at here).
+    https://myaccount.google.com/lesssecureapps
+
+    And unlock Captcha (link):
+    https://accounts.google.com/DisplayUnlockCaptcha
+

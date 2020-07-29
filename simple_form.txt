@@ -1,0 +1,97 @@
+how to show custom colum's value of database in f.association dropdown
+----------------------------------------------------------------------
+----------------solution--------------------------------------------
+
+ <%= f.association :teacher, label_method: :f_name , value_method: :id%>
+
+here f_name is custom colum name by default it take colum having with "name"
+
+
+
+===================================================================================
+
+
+
+
+
+
+
+
+
+
+how to show combination of two colum in f. association dropdown
+----------------------------------------------------------------------------
+-----------------solution------------------------------------------
+ <%= f.association :teacher, label_method: :name_of_method %>
+here name of method is function define in (f.association :teacher) 'teacher' model
+
+function is this
+
+  def name_of_method
+  
+  "#{f_name} #{l_name}"
+end
+
+besure function should be define in model listed in f.association : teacher thanks
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======================================================================================
+how to add id or class in f.associatio 
+----------------------------------------------------------------------------------
+-----------------solution--------------------------------------------------
+ <%= f.association :categories, input_html: { id: 'your_id', class: 'your_class' }  %>
+=======================================================================================
+
+==============================================type file================================
+
+   <%= form.input :img_name, as: :file, :label => 'Occupied element image' %>
+
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+selected: 1 for asoociation dropw down selected first as default
+----------------------------------------------------------
+
+
+
+
+
+
+
+
+ <%#= f.association :boards,collection: Board.where('id=?', 2)%>
+
+//////////////////////////////////////////////////////////////
+accept array
+      <%= f.input :obtain, input_html: { multiple: true }%>
+
+
+
+
+
+
+
+
+
+
+
+
+

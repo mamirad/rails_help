@@ -1,0 +1,6 @@
+how to create addon pg on heroku
+heroku addons:create heroku-postgresql
+heroku config --app your_app_name
+how to take backup of pg heroku
+heroku pg:backups capture
+heroku pg:backups download

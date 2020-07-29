@@ -1,0 +1,70 @@
+ Bug.joins(:asignedbugs).where(asignedbugs: {user_id:current_user.id})
+Customer.find("1").products.where 'sales.id<3'
+User.where(id: 201..Float::INFINITY)
+User.where("id > ?", 200) 
+ Boardgroup.where(['board_id=? and group_id=?',1,1])
+
+
+
+
+---------------------------many to many------------------------------------------------
+    @teacher = Teacher.new(teacher_params)
+    @group_lists= params[:teacher][:group_ids]
+
+        respond_to do |format|
+          if @teacher.save
+             @group_lists.each do|group_list|
+               @teacher.teacher_groups.create(teacher_id:params[:id],group_id:group_list)
+              end     
+
+            format.html { redirect_to @teacher, notice: 'Teacher was successfully created.' }
+            format.json { render :show, status: :created, location: @teacher }
+          else
+            format.html { render :new }
+            format.json { render json: @teacher.errors, status: :unprocessable_entity }
+          end
+        end
+
+-----------------------------------------------------------------------------------
+
+
+ # Updating multiple records; different col with different data:
+  people = { 1 => { "group_id" => 5 }, 2 => { "group_id" => 6 } }
+ Teacher.find(3).teacher_groups.update(people.keys,people.values)
+explanation
+in people hash 1 and 2 is id of teachergroup rows
+and group-id is col name
+and 5,6 value of groupd-id
+
+
+--------------------------------------------------------------------------------------
+
+
+where not in query in rails
+ @students = Student.where.not(id: StuFee.all)
+
+
+
+
+
+
+
+
+
+
+@user_shedules = Shedule.where(user_id: current_location.users.ids)
+			.where(
+					"(Date(day_start) >= ? AND Date(day_end) <= ?)
+				 	OR (
+						(DATE(day_start) <= ? OR DATE(day_start) BETWEEN ? AND ?) 
+						AND day_end IS NULL
+				      )",
+		                                start_date.to_date, end_date.to_date, start_date.to_date, 						start_date.to_date, end_date.to_date
+				)
+
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
+

@@ -1,0 +1,8 @@
+grep -rl "ActiveRecord::Migration$" db | xargs sed -i 's/ActiveRecord::Migration/ActiveRecord::Migration[4.2]/g'
+
+
+
+  	   change_column :bank_details, :bank_name, :integer, using: 'bank_name::integer'
+change_column :table_name, :column_name, :new_type
+
+

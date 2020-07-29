@@ -1,0 +1,2 @@
+rails db:migrate:status
+rails db:migrate:down VERSION=20190613111428

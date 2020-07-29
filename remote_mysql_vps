@@ -1,0 +1,52 @@
+go to /etc/mysql/mysql.conf.d/mysqld.cnf
+
+find bind address
+change localhost or its ip  to dadicated ip vps
+restart mysql using this cmd
+sudo /etc/init.d/mysql restart
+
+
+
+then go to navcat or emma add username db password db port 3306 and db name enter 
+success you are
+
+
+remote pg
+
+
+
+
+
+Change the address PostgreSQL listens to.
+
+Using Nano (or vim/emacs/whatever), edit your postgresql.conf file. We're specifically looking for a line that says listen_addresses. We're going to modify where PostgreSQL is listening on.
+
+# /etc/postgresql/9.1/main/postgresql.conf
+
+#---------------------------------------------------------
+# CONNECTIONS AND AUTHENTICATION
+#---------------------------------------------------------
+
+# - Connection Settings -
+
+listen_addresses = '*'  # Postgres, pretty please keep your ears open on everything. 
+
+Allow remote connections to actually reach your PostgreSQL instance.
+
+Next we're going to edit our pg_hba.conf file and configure it to allow remote connections. At the very end of the file, add the following line:
+
+# /etc/postgresql/9.1/main/pg_hba.conf
+
+host all all  0.0.0.0/0 md5
+
+This is a rule that basically tells PostgreSQL to allow anyone to access the instance as long as they have proper credentials.
+
+If you want to whitelist your IP only you can use your network/mask instead of 0.0.0.0/0.
+Restart your PostgreSQL instance.
+
+That's it, you're done. Restart it.
+
+sudo service postgresql restart
+
+Now you can use a tool like PgAdmin or RubyMine to access your remote database.
+

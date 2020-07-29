@@ -1,0 +1,2 @@
+  before_action :set_adminteacher, only: [:show, :edit, :update, :destroy]
+    after_action :teacher_signup, only: [:create]

@@ -1,0 +1,18 @@
+redirect_to(new_product_path)
+
+
+
+this render is used to fatch the sub template of main template for example
+in adminlte fatch the sub temple name as menu.html.erb 
+we make menu.html.erb and past the menu code and use this line to render this template in main templet.
+
+
+
+
+<%=render template: "layouts/menu" %>
+
+
+use of link to with fa fa and class
+
+
+<%= link_to '<i class="fa fa-paperclip"></i> Do it'.html_safe, teacher,class:"btn btn-default btn-xs" %>

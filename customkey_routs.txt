@@ -1,0 +1,29 @@
+  #how to change custom id
+=====================================
+1st: update migration as  
+=====================================
+ table_name,
+    {
+      :id           => false,
+      :primary_key  => :reg
+    }do |t|
+
+==========================================
+2nd: update routes
+=========================================
+
+  resources :cources, param: :courceid
+
+==========================================
+3rd: update model
+==========================================
+
+self.primary_key="courceid"
+
+==========================================
+4th: update controller
+==========================================
+
+update param[:id ]  to param[:custom_id]
+
+==========================================

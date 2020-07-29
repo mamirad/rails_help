@@ -1,0 +1,13 @@
+  #how to change custom id 
+  #resources :cources, param: :courceid
+ has_one :store, foreign_key: 'foo_bar_store_id'
+
+
+===========get request to controller method search_products======================
+
+get 'search_products', to: 'instalment#search_products'
+
+=========================get request with parameter =============================
+
+  get 'bugdelivered/:bugid', to: 'bug#bugdelivered', as: 'bugdelivered'
+===============================================================

@@ -1,0 +1,21 @@
+<% if @article.errors.any? %>
+
+		<h4>The following errors prevented </h4>
+
+			<div class="alert alert-warning">
+
+				<% @article.errors.full_messages.each do |msg| %>
+
+				<%= msg %>
+
+				<% end %>
+
+			</div>
+
+	<% end %>
+
+
+
+begin
+rescue Exception => e
+end

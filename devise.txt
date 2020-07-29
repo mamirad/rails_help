@@ -1,0 +1,221 @@
+In your gemfile, add the devise gem:
+
+	gem 'devise'
+
+Then run:
+
+	bundle install --without production
+
+Then install devise in your application:
+
+	rails generate devise:install
+.................................................................
+
+Some setup you must do manually if you haven't yet:
+
+  1. Ensure you have defined default url options in your environments files. Here
+     is an example of default_url_options appropriate for a development environment
+     in config/environments/development.rb:
+
+       config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+     In production, :host should be set to the actual host of your application.
+
+  2. Ensure you have defined root_url to *something* in your config/routes.rb.
+     For example:
+
+       root to: "home#index"
+
+  3. Ensure you have flash messages in app/views/layouts/application.html.erb.
+     For example:
+
+       <p class="notice"><%= notice %></p>
+       <p class="alert"><%= alert %></p>
+
+  4. You can copy Devise views (for customization) to your app by running:
+
+     
+...........................................................................................
+
+	
+
+
+	rails generate devise User
+
+	rake db:migrate to add users table
+
+Add the following line to the application_controller.rb file under app/controllers:
+
+	before_action :authenticate_user!
+
+Add a logout link to the homepage which is the index.html.erb view under app/views/welcome folder:
+
+	<%= link_to "logout", destroy_user_session_path, method: :delete %>
+change url
+devise_for :users, :path_names => {:sign_up => "register"}
+
+
+
+.....................................................................................
+add custom field in registration form
+
+1) create new migraion and all your desire columns for example
+   add_column :users, :name, :string
+    add_column :users, :backcnicimg, :string
+    add_column :users, :frontcnicimg, :string
+    add_column :users, :mobile, :bigint
+    add_column :users, :cnic, :bigint
+    add_column :users, :address, :string
+    add_column :users, :designation, :string
+    add_column :users, :dob, :date
+    add_column :users, :gender, :string
+    add_column :users, :city, :string
+    add_column :users, :joindate, :date
+    add_column :users, :profileimg, :string
+2) 
+	rails db:migrate
+
+
+
+3)
+	and text field in view/devise/registrations/new
+		
+		if you want to take picture during registration also update form-for with multipart true as show below
+
+
+	   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:multipart => true}) do |f|%>
+
+
+
+add new text field for  registration
+
+for example 
+
+    <div class="field">
+      <%= f.label :address %><br/>
+      <%= f.text_field :address, autofocus: true, autocomplete: false ,class:"form-control"%>
+    </div>
+
+    <div class="field">
+      <%= f.label :gender %><br/>
+      <%= f.select :gender, [["Male", "male"], ["Female", "female"]], {}, class: "form-control" %>
+    </div>
+
+    <div class="field">
+ 
+    <div class="field">
+      <%= f.label :Profile_IMG %><br/>
+      <%= f.file_field :profileimg, autofocus: true, autocomplete: false ,class:"form-control",accept: 'image/jpeg,image/gif,image/png'%>
+    </div>
+
+
+
+
+4)
+
+ generate controller all for devise
+
+
+
+  rails g devise:views
+
+	rails generate devise:controllers users
+
+@user.valid_password?
+
+
+
+ # POST /resource/sign_in
+  def create
+    # super
+      # byebug
+
+      begin  
+        @find_user = params[:user][:email]
+        @password_user = params[:user][:email]
+
+        @user = User.find_by_email(@find_user)
+         if @user.valid_password?(@password_user)
+          sign_in(@user)
+          redirect_to(root_path)
+    	redirect_to(request.referrer)
+        else
+          flash[:notice] = "invalid email or password"
+         redirect_to(new_user_session_path)
+        end
+    
+      rescue StandardError => e  
+        super
+        puts e.message  
+        puts e.backtrace.inspect  
+      end  
+
+
+      
+  end
+
+
+
+
+
+5)
+
+make sure you have update application controller. rb now like
+
+
+
+class ApplicationController < ActionController::Base
+	before_action :authenticate_user!
+	before_action :configure_permitted_parameters, if: :devise_controller?
+
+	def configure_permitted_parameters
+        devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:name,:city, :address, :gender, :dob, :mobile, :cnic, :designation, :email, :password)}
+        devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:name, :email, :password, :current_password)}
+	end   
+
+
+#usign enm to redirect user on the base of authority
+
+
+	def after_sign_in_path_for(resource)
+		if current_user.role==User.roles.index(2)
+			 root_path		
+		else
+			 home2_path 
+		end
+    
+	end
+
+
+
+
+            
+end
+
+
+
+
+
+...................................................................
+To verify if a user is signed in, use the following helper:
+
+user_signed_in?
+For the current signed-in user, this helper is available:
+
+current_user
+You can access the session for this scope:
+
+
+
+
+
+
+skip_before_action :authenticate_teacher_account!,only: [:index]
+
+
+
+user_session
+
+
+
+)

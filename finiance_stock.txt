@@ -1,0 +1,4 @@
+https://github.com/tyrauber/stock_quote
+
+add gem
+	gem 'stock_quote'

@@ -1,0 +1,54 @@
+class User < ActiveRecord:Base
+   enum role: {seller: 0, buyer: 1, admin: 2}
+  enum status: [:done, :not_done]  auto default start with zero 
+
+   ... 
+end
+You'll need a migration to add a role (integer) column into your user's table.
+
+In your terminal:
+
+rails g migration add_role_to_users role:integer
+
+In your terminal:
+rails c:
+User.roles
+User.roles.keys (it takes rolls as a key means as roll name => ["admin", "buyer"])
+reload!
+User.first.update(role: "admin")
+User.first.role
+
+
+
+to redirect user to different layout on the base of outh
+ and in application controller thes methods
+
+def after_sign_in_path_for(resource)
+		if current_user.role==User.roles.index(2)
+			 root_path		
+		else
+			 home2_path 
+		end
+    
+	end
+
+class Conversation < ActiveRecord::Base
+  enum status: [ :active, :archived ]
+end
+
+# conversation.update! status: 0
+conversation.active!
+conversation.active? # => true
+conversation.status  # => "active"
+
+# conversation.update! status: 1
+conversation.archived!
+conversation.archived? # => true
+conversation.status    # => "archived"
+
+# conversation.status = 1
+conversation.status = "archived"
+
+conversation.status = nil
+conversation.status.nil? # => true
+conversation.status      # => nil

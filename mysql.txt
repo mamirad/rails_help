@@ -1,0 +1,85 @@
+ mysql installation cmd
+
+	$ sudo apt-get update
+	$ sudo apt-get install mysql-server
+
+config mysql
+	$ sudo mysql_secure_installation
+
+
+Testing MySQL
+mysql console for queries
+
+	sudo mysql -u root -p
+
+create user
+	CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+grant privillege
+GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+
+update database.myl in project
+
+check mysql status
+	$ service mysql status
+
+start mysql
+	$ sudo service mysql start
+
+check mysql version
+	$ mysql --version
+create database with name written database.yml in development portion
+$ rails db:create
+
+
+an error accour while installing mysql to resolve this 
+sudo apt-get install libmysqlclient-dev
+......................
+  def change
+    add_column :users, :first_name, :string
+    add_column :users, :last_name, :string
+  end
+......................
+   create_table :students ,
+    {
+      :id           => false,
+      :primary_key  => :reg
+    }do |t|
+......................................
+attr_accessor :cls_name,:section,:shift
+validates :cls_name, presence: true
+validates_uniqueness_of :teacher_id, scope: [:semester_id, :class_id]
+self.primary_key = "courceid"
+............................................................
+
+
+
+
+RAILS_ENV=production bundle exec rake db:create
+tail -f /var/log/nginx/error.log 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

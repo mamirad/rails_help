@@ -1,0 +1,29 @@
+1: add this code in application helper
+
+........................................................
+module ApplicationHelper
+	def gravatar_for(a, options = { size: 80})
+
+gravatar_id = Digest::MD5::hexdigest(a.user.email.downcase)
+
+size = options[:size]
+
+gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"
+
+image_tag(gravatar_url, alt: a.user.name, class: "img-circle")
+
+end
+end
+.............................................................
+2: add line where you want to add gravatar 
+<%= gravatar_for current_user.email, size: 50 %>
+
+
+
+   LoadModule passenger_module /home/a/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/passenger-5.3.5/buildout/apache2/mod_passenger.so
+   <IfModule mod_passenger.c>
+     PassengerRoot /home/a/.rbenv/versions/2.5.1/lib/ruby/gems/2.5.0/gems/passenger-5.3.5
+     PassengerDefaultRuby /home/a/.rbenv/versions/2.5.1/bin/ruby
+   </IfModule>
+
+

@@ -1,0 +1,7 @@
+Bootstrap install
+	gem 'bootstrap-sass', '3.3.7'
+Adding Bootstrap CSS at this  path app/assets/stylesheets/custom.scss
+	@import "bootstrap-sprockets";
+	@import "bootstrap";
+
+
