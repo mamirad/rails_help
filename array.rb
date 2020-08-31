@@ -2,6 +2,22 @@ x= (1..100).to_a
 print x
 puts
 100.times{print"-"}
+
+Concatenation:
+combine two arrays
+[1,2,3]+[4,5,6]=[1,2,3,4,5,6]
+[1,2,3].concat([4,5,6])=[1,2,3,4,5,6]
+
+ Set Operations :
+union (or) of two array
+[1,2,3] | [2,3,4,5] = [1,2,3,4,5]
+
+intersaction (And) of two array
+[1,2,3] & [2,3,4,5] = [2,3]
+
+
+Insert:
+
 puts "last element of array=#{x.last}"
 puts "first element of array=#{x.first}"
 puts "push--"*5
@@ -11,6 +27,14 @@ puts "pop --"*5
 x.pop
 p x
 
+colors = ["red", "green", "blue"]
+=> ["red", "green", "blue"]
+
+colors.insert( 1, "orange" )
+=> ["red", "orange", "green", "blue"]
+
+
+Delete Array
 
 
 puts "delete via specifich value"
@@ -20,6 +44,16 @@ p x
 puts "delete via specifich index"
 x.delete_at(12)
 p x
+
+Remove Nill From Array
+
+array.compact
+
+Operations:
+a=[1,2,3,4,5,6,7]
+a.slice(2,3) slice(start,length)
+ => [3, 4, 5] 
+ => a[start,length]
 
 
   

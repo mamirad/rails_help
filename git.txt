@@ -127,6 +127,9 @@ uncommit code branch
 git reset --soft HEAD^
 
 
+git reset --hard
+
+
 
 
 
