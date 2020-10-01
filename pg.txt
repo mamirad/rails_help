@@ -50,3 +50,12 @@ Once you enter your shell type:
 
 In the place of username,you have to add your default system username in most of the cases.
 
+
+
+peer vs md5
+peer login user if it has unix default user
+md need localhost ip along with database name and password
+sudo nano /etc/postgresql/12/main/pg_hba.conf
+
+sudo service postgresql restart
+
