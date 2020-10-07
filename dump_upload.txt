@@ -3,6 +3,9 @@ open terminal
 type sudo su
 then past this comand
 psql etyme_development < live_dump.sql
+2nd optioin
+past dump.sql in project root
+psql -U postgres salesdoor_development < salesdoor_dump.sql
 
 how to download dump from pg
 
