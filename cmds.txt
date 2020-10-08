@@ -4,5 +4,6 @@ sudo nano ~/.profile
 
 set host
 sudo nano /etc/hosts
+
 ActiveRecord::Base.connection.tables    /* use to view array of tables in database /*
 

@@ -1,0 +1,68 @@
+
+cmd
+
+sudo nano ~/.profile 
+
+past below code
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  GNU nano 4.8                                                                             /home/aks-it-147/.profile                                                                                       
+# exists.
+# see /usr/share/doc/bash/examples/startup-files for examples.
+# the files are located in the bash-doc package.
+
+# the default umask is set in /etc/profile; for setting the umask
+# for ssh logins, install and configure the libpam-umask package.
+#umask 022
+
+# if running bash
+if [ -n "$BASH_VERSION" ]; then
+    # include .bashrc if it exists
+    if [ -f "$HOME/.bashrc" ]; then
+        . "$HOME/.bashrc"
+    fi
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+export RECAPTCHA_SITE_KEY='6LefqVwUAAAAAOJs-lVMTvQArVnlLOTUVdq-cL9J'
+export RECAPTCHA_SECRET_KEY='6LefqVwUAAAAAFF-jLy_zR1mIOA6I9pYU3kFswJl'
+export AUTHORIZE_NET_LOGIN='99U7te4AzeED'
+export AUTHORIZE_NET_PASS='38ZHjM2p23g6bu4S'
+export AUTHORIZE_NET_CLIENT_KEY='3eWcqKY5prRPbTF3XyNC789r98PXSemda4qm594WFSnFf8L5jH5585YkRVG44Q3m'
+export BLOOMAPI_SECRET_TOKEN='4ea08f212d786882a39dfbe5b6770386'
+
+
