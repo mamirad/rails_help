@@ -1,0 +1,67 @@
+default:
+  selector: textarea.redactor
+  theme: modern
+  statusbar: false
+  toolbar1: insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image
+  toolbar2: print searchreplace media | forecolor backcolor emoticons | fontsizeselect fontselect
+  plugins:
+    - autoresize
+    - advlist
+    - autolink
+    - autosave
+    - lists
+    - link
+    - image
+    - charmap
+    - print
+    - hr
+    - anchor
+    - pagebreak
+    - searchreplace
+    - wordcount
+    - visualblocks
+    - visualchars
+    - code
+    - fullscreen
+    - insertdatetime
+    - media
+    - nonbreaking
+    - insertdatetime
+    - media
+    - nonbreaking
+    - save
+    - table
+    - contextmenu
+    - directionality
+    - table
+    - contextmenu
+    - emoticons
+    - template
+    - paste
+    - textcolor
+    - colorpicker
+    - textpattern
+    - codesample
+    - imagetools
+
+alternate:
+  selector: textarea.sinopse
+  theme: modern
+  menubar: false
+  statusbar: false
+  toolbar: bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image
+  plugins:
+    - autoresize
+    - advlist
+    - autolink
+    - lists
+    - link
+    - image
+    - charmap
+    - anchor
+    - searchreplace
+    - visualblocks
+    - insertdatetime
+    - media
+    - contextmenu
+    - paste

@@ -26,7 +26,8 @@ past below code
  
  
  
-  GNU nano 4.8                                                                             /home/aks-it-147/.profile                                                                                       
+  GNU nano 4.8 
+/home/aks-it-147/.profile                                                                                       
 # exists.
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
