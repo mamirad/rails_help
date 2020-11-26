@@ -76,3 +76,18 @@ If it is a more dynamic requirement than this, you could always use string inter
 
 
 
+ajax in jquery
+$.ajax({
+	type: "POST",
+	url: "/campaigns/send_test_message",
+	data: {id: campaign_id, body: message_body, email: test_email, type: outreach_type, carrier: "web"},
+	dataType: 'script',
+
+	success: function () {
+	// jQuery.notify("Email was sent successfully notify");
+	// return;
+	}
+});
+
+
+
