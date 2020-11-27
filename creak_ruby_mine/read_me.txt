@@ -26,7 +26,7 @@ example
 
 
 3)Restart RubyMine 
-4)Click => Enter key Option
+4)Click => Help then register  then check activation code
 5)middle eveluation key click and paste code of "activation_code.json" file (Change licence name in file i-e (Hafiz Muhammad Bilal))
 6)Click Ok
 7)RubyMine is Ready Now :)
