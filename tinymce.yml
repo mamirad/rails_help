@@ -45,3 +45,8 @@ default:
   branding: false
   statusbar: false
   menubar: false
+  
+  
+  tinymce display none to text area and place an iframe. parsaly validate text area that find empty to resolve it
+  it will add tinymce content to text area as well
+  tinymce.triggerSave(); 
