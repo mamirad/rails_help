@@ -1,0 +1,19 @@
+<%= form_tag "/create_contactus", method: :post, remote:true, id: "contact-form" ,'data-parsley-validate':'true' do %>
+
+
+
+<div class="form-group">
+                <%= text_field_tag :phone, params[:phone],
+                                   placeholder: 'eg: (555) 555-5555', autofocus: true,
+                                   class: "form-control", 'data-plugin' => "formatter", "data-pattern" => '({{999}}) {{999}}-{{9999}}', 'data-persistent' => 'false', "data-parsley-pattern" => "/\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}(x[0-9]{4})?/", 'data-parsley-trigger' => "change", 'data-parsley-required' => true, 'data-parsley-required-message' => "Phone is required"  %>
+              </div>
+              
+              
+              
+              
+              
+              <div class="form-group">
+                <%= email_field_tag :email, params[:email],
+                                   placeholder: "Email*", autofocus: true,
+                                   class: "form-control", 'data-parsley-required' => true, 'data-parsley-required-message' => "Email is required" %>
+              </div>

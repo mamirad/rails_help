@@ -1,24 +1,23 @@
 default:
-  selector: textarea.redactor
   theme: modern
-  statusbar: false
-  toolbar1: insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image
-  toolbar2: print searchreplace media | forecolor backcolor emoticons | fontsizeselect fontselect
+  toolbar1: styleselect |fontsizeselect fontselect fontsizeselect |  bold italic underline strikethrough | insertfile undo redo numlist outdent | bullist   indent |contextmenu   table | uploadimage media | link image forecolor backcolor  hr charmap | printsearch  searchreplace
+#  toolbar1: print searchreplace media | forecolor backcolor emoticons | fontsizeselect fontselect
+#  toolbar1: uploadimage | insertfile undo redo | styleselect | bold italic underline strikethrough  | bullist numlist outdent indent | link image forecolor backcolor emoticons | fontsizeselect fontselect
+# above comment toolbar is helpfull to add and romve features in tinymce editor. dont remove its
+
   plugins:
     - autoresize
     - advlist
+    - uploadimage
     - autolink
-    - autosave
     - lists
     - link
-    - image
     - charmap
     - print
     - hr
     - anchor
     - pagebreak
     - searchreplace
-    - wordcount
     - visualblocks
     - visualchars
     - code
@@ -42,26 +41,7 @@ default:
     - colorpicker
     - textpattern
     - codesample
-    - imagetools
-
-alternate:
-  selector: textarea.sinopse
-  theme: modern
-  menubar: false
+  uploadimage_form_url: '/attachments/upload?tinymce=true'
+  branding: false
   statusbar: false
-  toolbar: bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image
-  plugins:
-    - autoresize
-    - advlist
-    - autolink
-    - lists
-    - link
-    - image
-    - charmap
-    - anchor
-    - searchreplace
-    - visualblocks
-    - insertdatetime
-    - media
-    - contextmenu
-    - paste
+  menubar: false
