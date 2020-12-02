@@ -17,3 +17,22 @@
                                    placeholder: "Email*", autofocus: true,
                                    class: "form-control", 'data-parsley-required' => true, 'data-parsley-required-message' => "Email is required" %>
               </div>
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              $('#new_note').parsley({ excluded: ".ignore-parsley" })
