@@ -1,0 +1,124 @@
+Add Gem for braintree
+............................form code .................................
+<%= form_for(@credit_card,authenticity_token:true,  url:  {controller: 'organizations', action: @credit_card.new_record? ? 'add_credit_card' : 'update_credit_card'},remote: true, method: 'post', html: {'data-parsley-validate': 'true', class: '', id: 'payment-form', onsubmit: 'return false;'}) do |f| %>
+  <section>
+    <div class="bt-drop-in-wrapper">
+      <div id="bt-dropin"></div>
+    </div>
+
+  </section>
+  <input type="hidden" name="card_name" id="card_name"/>
+  <input type="hidden" name="card_expiry_month" id="card_expiry_month"/>
+  <input type="hidden" name="card_expiry_year" id="card_expiry_year"/>
+  <input type="hidden" name="card_bin" id="card_bin"/>
+  <input type="hidden" name="card_last_four" id="card_last_four"/>
+  <input type="hidden" name="card_type" id="card_type"/>
+  <input type="hidden" name="card_nonce" id="card_nonce"/>
+
+  <button class="btn btn-primary"  id="braintree_submit"><span>Submit</span></button>
+<% end %>
+
+<!--<script src="https://js.braintreegateway.com/web/dropin/1.25.0/js/dropin.min.js"></script>-->
+<script>
+    var braintree_form = $('#payment-form')[0];
+    var button = document.querySelector('#braintree_submit');
+
+    var client_token = "<%= @client_token %>";
+    braintree.dropin.create({
+        authorization: client_token,
+        container: '#bt-dropin',
+        card: {
+            cardholderName: {
+                required: true
+                // to make cardholder name required
+                // required: true
+            }
+        }
+    }, function (createErr, instance) {
+        button.addEventListener('click', function () {
+            instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
+                // Submit payload.nonce to your server
+                console.log(payload);
+                var payment_details = payload.details;
+                $('#card_name').val(payment_details.cardholderName);
+                $('#card_expiry_month').val(payment_details.expirationMonth);
+                $('#card_expiry_year').val(payment_details.expirationYear);
+                $('#card_bin').val(payment_details.bin);
+                $('#card_last_four').val(payment_details.lastFour);
+                $('#card_type').val(payment_details.cardType);
+                $('#card_nonce').val(payload.nonce);
+                braintree_form.submit();
+
+            });
+        });
+    });
+</script>
+.......................................................................................................................
+
+----------------------after create call back call (setup_braintree_prifile)
+.......................................................................................................................
+def setup_braintree_profile!
+    return add_new_payment_method! if self.organization.customer_profile_id.present?
+    result = CreditCard.gateway.customer.create(
+        briantree_customer_params
+    )
+    if result.success?
+      self.organization.update! customer_profile_id: result.customer.id
+      self.update! customer_payment_profile_id: result.customer.payment_methods[0].token
+      if self.organization.customer_profile_id.present?
+        CreditCard.gateway.credit_card.update(result.customer.payment_methods[0].token,:options => {:make_default => true})       ....make card primry....
+        self.update!(default: true)
+      end
+    else
+      raise result.errors.map(&:inspect).to_sentence
+    end
+  end
+
+  def add_new_payment_method!
+    result = CreditCard.gateway.payment_method.create(
+        :customer_id => self.organization.customer_profile_id,
+        :payment_method_nonce => self.opaque_descriptor,
+        :options => {
+            :verify_card => true
+        },billing_address: self.billing_address_params
+    )
+    if result.success?
+      self.update! customer_payment_profile_id: result.payment_method.token
+    else
+      raise result.errors.map(&:inspect).to_sentence
+    end
+  end
+
+  def briantree_customer_params
+    {
+        :payment_method_nonce => self.opaque_descriptor,
+        :first_name => self.organization.first_name,
+        :last_name => self.organization.last_name,
+        :credit_card => {
+            :billing_address => billing_address_params,
+            :options => {
+                :verify_card => true
+            }
+        }
+    }
+  end
+
+  def billing_address_params
+    {
+        :first_name => self.first_name,
+        :last_name => self.last_name,
+        :company => self.organization.name,
+        :street_address => self.address&.address,
+        :locality => self.address&.city,
+        :region => self.address&.state,
+        :postal_code => self.address&.zip_code&.code
+    }
+  end
+  ............................................................................................
+  
+--------------------delete braintree-----------------------
+-------------------------------------------------------------------------------------------
+
+
+
+
