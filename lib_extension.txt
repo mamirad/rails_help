@@ -1,0 +1,16 @@
+module DeviseSecurityExtension
+  module Controllers
+    module Helpers
+      extend ActiveSupport::Concern
+      protected
+
+      # allow to overwrite for some special handlings
+      def ignore_password_expire?
+        if respond_to?(:current_user) && current_user && current_user.organization
+          return  !current_user.organization.expire_password
+        end
+        false
+      end
+    end
+  end
+end
