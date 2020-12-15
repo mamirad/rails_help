@@ -46,6 +46,12 @@ default:
   statusbar: false
   menubar: false
   
+  relative_urls : false
+  remove_script_host : false
+  convert_urls: true
+  document_base_url: 'https://salesdoor.com/'
+  
+  
   
   tinymce display none to text area and place an iframe. parsaly validate text area that find empty to resolve it
   it will add tinymce content to text area as well
