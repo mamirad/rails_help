@@ -145,3 +145,26 @@ export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\] $ "
 ..................................................................
 
 
+
+
+
+
+
+ssh sannan@192.168.5.138
+
+
+cd /var/www/projects/salesdoor/
+
+git pull origin api-end-points
+
+passphrase: salesdoor123#
+
+#If any migration added in code then run
+
+RAILS_ENV=local_development rake db:migrate
+
+touch tmp/restart.txt
+
+
+
+
