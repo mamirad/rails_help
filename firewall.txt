@@ -5,7 +5,8 @@ To follow this tutorial, you will need:
     One Ubuntu 18.04 server with a sudo non-root user, which you can set up by following Steps 1–3 in the Initial Server Setup with Ubuntu 18.04 tutorial.
 
 UFW is installed by default on Ubuntu. If it has been uninstalled for some reason, you can install it with
-	 sudo apt install ufw.
+
+line#1	 sudo apt install ufw.
 
 Step 1 — Using IPv6 with UFW (Optional)
 
@@ -56,7 +57,14 @@ To enable UFW, use this command:
 
 You will receive a warning that says the command may disrupt existing SSH connections. We already set up a firewall rule that allows SSH connections, so it should be fine to continue. Respond to the prompt with y and hit ENTER.
 
-The firewall is now active. Run the sudo ufw status verbose command to see the rules that are set. The rest of this tutorial covers how to use UFW in more detail, like allowing or denying different kinds of connections.
+The firewall is now active. Run the 
+
+
+
+sudo ufw status verbose 
+
+
+command to see the rules that are set. The rest of this tutorial covers how to use UFW in more detail, like allowing or denying different kinds of connections.
 Step 5 — Allowing Other Connections
 
 At this point, you should allow all of the other connections that your server needs to respond to. The connections that you should allow depends on your specific needs. Luckily, you already know how to write rules that allow connections based on a service name or port; we already did this for SSH on port 22. You can also do this for:

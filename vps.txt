@@ -12,6 +12,7 @@ sudo apt-get install imagemagick --fix-missing
 
 delete non empty folder ubunty
 rm -rf lampp
+rm -r foldername
 
 log production site
 
