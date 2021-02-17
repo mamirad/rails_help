@@ -1,0 +1,11 @@
+git stash save "new data"
+
+
+
+git checkout -b load-sample-data
+
+
+git stash apply stash@{0}
+
+
+git stash list

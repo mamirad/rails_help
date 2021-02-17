@@ -63,7 +63,7 @@ paramss= {"utf8"=>"✓", "authenticity_token"=>"y3d3r2BCkU4kWR3J/PUnyefdPxweGReD
 puts paramss["book"]["bookname"]
 
 
-
+{email: 'emails',fax: 'faxes',sms: 'sms'}.with_indifferent_access['email']     ans is 'email'
 
 
 

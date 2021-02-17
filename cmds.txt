@@ -7,3 +7,7 @@ sudo nano /etc/hosts
 
 ActiveRecord::Base.connection.tables    /* use to view array of tables in database /*
 
+
+
+
+4847120045

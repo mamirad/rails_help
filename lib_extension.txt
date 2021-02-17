@@ -14,3 +14,8 @@ module DeviseSecurityExtension
     end
   end
 end
+
+
+config/application.rb
+    config.autoload_paths << Rails.root.join('lib')
+    require "#{Rails.root}/lib/extensions"

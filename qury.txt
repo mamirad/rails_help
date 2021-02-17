@@ -67,4 +67,5 @@ where not in query in rails
 
 ------------------------------------------------------------------------------------------------------------------
 
+  has_many :sms_sent, -> { where(delivery_status: 0)}, through: :connections,source: :recipients
 
