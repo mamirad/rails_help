@@ -65,6 +65,13 @@ puts paramss["book"]["bookname"]
 
 {email: 'emails',fax: 'faxes',sms: 'sms'}.with_indifferent_access['email']     ans is 'email'
 
+2.3.0 :014 > h1
+ => {:k1=>"v1", :k2=>"v2"} 
+2.3.0 :015 > h2
+ => {:k1=>"v22", :k2=>"v22"} 
+2.3.0 :016 > h2.inject(h1.dup) {|accum,(k2,v2)| accum[k2]= [accum[k2],v2].compact;accum }
+ => {:k1=>["v1", "v22"], :k2=>["v2", "v22"]} 
+
 
 
 

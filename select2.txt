@@ -1,0 +1,12 @@
+  <%= select_tag "programs[]",options_for_select(Filter.all), {'data-plugin' => "select2", 'data-max-options'=>"10", class: 'js-data-example-ajax form-control attachment_ids', 'data-url'=> data_get_programs_path(carrier: 'web'), 'multiple' => true, 'data-placeholder' => "Programs"} %>
+
+
+
+
+  def get_programs
+    @programs = Filter.where("name ILIKE ?", "%#{params[:q]}%").map {|a| {id:a.id,text: a.name}}
+    render json: @programs.to_json,status: 200
+  end
+  
+  
+  
