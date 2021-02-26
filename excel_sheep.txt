@@ -1,0 +1,59 @@
+class SpreadsheetImportProcessor
+  attr_accessor :file,:columns,:data
+  def initialize(columns,file)
+    @columns = columns
+    @file = file
+  end
+
+  def import_mapping mapped_column_names
+    mapping = columns.zip(mapped_column_names)
+    return mapping
+  end
+
+  def read_file
+    @data ||= Roo::Spreadsheet.open(file.path, { csv_options: { encoding: 'bom|utf-8' }})
+    return data
+  end
+
+  def get_parse_sheet
+    sheet = read_file
+    return sheet.parse(headers: true, clean: true).drop(1).map  {|hash| float_to_inter(hash)}
+  end
+
+  def float_to_inter hash
+       hash.inject({}) do |accum,(key,val)|
+         accum[key] = val
+         if val.to_s.gsub(/\d+/,'').length == 1
+           accum[key] = val.to_i.to_s
+         end
+         accum
+       end
+  end
+
+  def get_headers
+    read_file.row(1)&.compact&.map &:squish
+  end
+
+  def get_mapped_data mapping
+    return if mapping.blank?
+    sheet = get_parse_sheet
+    result = []
+    attributes_hash = {}
+
+    sheet.each_with_index do |row, index|
+      row.each_with_index do |a|
+        if mapping.select{|(x, y)| y == a[0]}.present?
+          column_name = mapping.find { |l, m| m == a[0]}
+          columns.each do |c|
+            if c == column_name[0]
+              attributes_hash["#{column_name[0].parameterize.underscore}".to_sym] = a[1]
+            end
+          end
+        end
+      end
+      result.push(attributes_hash)
+      attributes_hash = {}
+    end
+    return result
+  end
+end
