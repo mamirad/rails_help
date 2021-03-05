@@ -16,13 +16,19 @@ module DeviseSecurityExtension
 end
 
 
-config/application.rb
-    config.autoload_paths << Rails.root.join('lib')
-    require "#{Rails.root}/lib/extensions"
-    
-    
-    
-    require File.expand_path('../boot', __FILE__)
+
+
+
+
+
+
+
+
+
+application.rb
+
+
+require File.expand_path('../boot', __FILE__)
 
 require "rails"
 # Pick the frameworks you want:
