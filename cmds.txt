@@ -11,3 +11,11 @@ ActiveRecord::Base.connection.tables    /* use to view array of tables in databa
 
 
 4847120045
+
+
+
+
+console show current branch
+sudo nano ~/.bashrc
+export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\] $ "
+
