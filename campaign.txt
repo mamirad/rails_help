@@ -1,0 +1,12 @@
+def processed_body_with_trackers(body)
+    campaign_urls = body.scan(/(<a[^>]* href="([^"]*)")|(<a[^>]* href='([^"]*)')/).map(&:compact)
+    campaign_urls.each do |(anchor,url)|
+      next unless anchor && url
+      internal_url = "#{APP_URL}/campaigns/#{message&.campaign&.hashid}/tracking?token=#{secret_token}&redirect_url=#{url}"
+      new_anchor = anchor.gsub /href(.*)["']+/,"href=\"#{internal_url}\""
+      body.gsub! anchor,new_anchor
+    end if campaign_urls.present?
+    url = "#{APP_URL}/emails/images/#{secret_token}"
+    tracker = "<div style=\"background-image: url("+url + ");visibility:hidden;overflow:hidden;width:0;height:0\"</div>"
+    body + tracker
+  end
