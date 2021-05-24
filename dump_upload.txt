@@ -11,31 +11,3 @@ how to download dump from pg
 
 sudo -u postgres pg_dump  database_name > filename
 
-<%if contact_type == "ContactPerson" %>
-  <%cp_practice = ContactPerson.find_by_id(contact_id)&.practice%>
-  <%= link_to contact_name,
-              "javascript:addToTab(#{{url: edit_practice_path(cp_practice.id),
-                                      title: cp_practice.first_name,
-                                      id: "practice_#{cp_practice.id}"}.to_json})" %>
-<%end%>
-<%if contact_type == "Provider" %>
-  <%provider = Provider.find_by_id(contact_id)%>
-  <%= link_to contact_name,
-              "javascript:addToTab(#{{url: edit_provider_path(provider.id),
-                                      title: provider.first_name,
-                                      id: "provider_#{provider.id}"}.to_json})" %>
-<%end%>
-<%if contact_type == "Practice" %>
-  <%practice = Practice.find_by_id(contact_id)%>
-  <%= link_to contact_name,
-              "javascript:addToTab(#{{url: edit_practice_path(practice.id),
-                                      title: practice.first_name,
-                                      id: "practice_#{practice.id}"}.to_json})" %>
-<%end%>
-<%if contact_type == "Patient" %>
-  <%patient = Patient.find_by_id(contact_id)%>
-  <%= link_to contact_name,
-              "javascript:addToTab(#{{url: edit_patient_path(patient.id),
-                                      title: patient.first_name,
-                                      id: "practice_#{patient.id}"}.to_json})" %>
-<%end%>

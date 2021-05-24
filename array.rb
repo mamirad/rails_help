@@ -111,3 +111,4 @@ end
             puts "ff"*500
             puts group_list
 end
+[['a'],['b']].flatten = [a,b]

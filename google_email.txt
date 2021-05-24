@@ -1,0 +1,276 @@
+# frozen_string_literal: true
+require "google/apis/drive_v3"
+require "google/apis/people_v1"
+module Oauth
+  class GoogleSource < Base
+    attr_accessor :params
+    AUTHORIZE_URI = 'https://accounts.google.com/o/oauth2/auth'
+    TOKEN_CREDENTIAL_URI = 'https://accounts.google.com/o/oauth2/token'
+    DATA_URL = 'https://www.googleapis.com/oauth2/v3/userinfo'
+    GENERIC_SCOPE = [Google::Apis::GmailV1::AUTH_SCOPE,
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/gmail.modify',
+      'https://www.googleapis.com/auth/gmail.send',
+      'https://mail.google.com/', 'https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/contacts'
+    ]
+    REFRESH_SCOPE = GENERIC_SCOPE
+    DEFAULT_SCOPE = [GENERIC_SCOPE, 'https://www.googleapis.com/auth/gmail.labels']
+
+    def self.client(callback_url, scope=nil,state=nil)
+      Signet::OAuth2::Client.new({client_id: GmailClientId, client_secret: GmailClientSecret,
+                                  authorization_uri: AUTHORIZE_URI,
+                                  scope: scope.present? ? scope : GENERIC_SCOPE,
+                                  grant_type: 'refresh_token',
+                                  state: state,
+                                  additional_parameters: {access_type: 'offline', approval_prompt: 'force'},
+                                  redirect_uri: callback_url}
+      )
+    end
+
+    def self.callback(params, callback_url)
+      Signet::OAuth2::Client.new({client_id: GmailClientId, client_secret: GmailClientSecret,
+                                  token_credential_uri: TOKEN_CREDENTIAL_URI,
+                                  redirect_uri: callback_url, code: params[:code], grant_type: 'refresh_token',
+                                  additional_parameters: {access_type: 'offline', approval_prompt: 'force'}
+
+                                 })
+    end
+
+
+    def self.oauth_token(params, callback_url)
+      google_client = Google::Auth::UserRefreshCredentials.new(
+        additional_parameters: {
+          "access_type" => "offline",
+          "include_granted_scopes" => "true"
+        },
+        client_id: GmailClientId,
+        client_secret: GmailClientSecret,
+        scope: REFRESH_SCOPE,
+        redirect_uri: callback_url
+      )
+
+      google_client.code = params[:code]
+      google_client.fetch_access_token!
+      google_client.refresh_token
+    end
+
+    def self.add_label(accountable)
+      Google::Apis::GmailV1::AUTH_GMAIL_LABELS
+    end
+
+    def self.create_label(service)
+      label_object = Google::Apis::GmailV1::Label.new(name: 'Salesdoor')
+      service.create_user_label('me', label_object)
+    end
+
+    def self.process_send(message, accountable, email_body, recipient)
+      account = accountable.account
+      mail = Mail.new do |m|
+        m.from account&.email
+        m.to recipient&.connection&.connection_detail&.value
+        m.subject message&.subject
+        m.body email_body
+        m.header['content-type'] = 'text/html'
+      end
+
+      refresh_token_if_necessary(account) if account&.token_expires_at.blank? || account&.token_expires_at < Time.now
+
+      client = Signet::OAuth2::Client.new(access_token: account.token)
+      service = Google::Apis::GmailV1::GmailService.new
+      service.authorization = client
+
+      list_of_labels = service.list_user_labels('me')&.labels
+      salesdoor_label = list_of_labels&.select {|label| label.name == 'Salesdoor'}
+
+      label_to_add = salesdoor_label.blank? ? create_label(service) : salesdoor_label
+
+      message_object = Google::Apis::GmailV1::Message.new(raw: mail&.to_s, label_ids: label_to_add&.collect(&:id))
+
+      message_response = service.send_user_message("me", message_object)
+      add_label_with_thread(message_response, service, label_to_add)
+      message.update(thread_id: message_response.thread_id, mail_id: message_response.id)
+
+    end
+
+    def self.add_label_with_thread(message_response, service, label_to_add)
+      modify_thread_request = Google::Apis::GmailV1::ModifyThreadRequest.new(add_label_ids: label_to_add&.collect(&:id))
+      service.modify_thread('me', message_response.thread_id, modify_thread_request)
+    end
+
+    def self.fetch_data
+      @client = HTTPClient.new
+      begin
+        data_get if @access_token.present?
+      rescue StandardError
+        raise StandardError, response['error']['errors']['message']
+      end
+    end
+
+    def self.treat_threads(source_threads, accountable, service,email_message_status, connection_type)
+      thread_messages = []
+      source_threads.threads.each do |thread_data|
+        thread_data = service.get_user_thread('me',thread_data&.id)
+        treat_thread_data(service, thread_data, thread_data.id, accountable,email_message_status, connection_type)
+      end if source_threads.threads.present?
+      thread_messages
+    end
+
+    def self.treat_thread_data(service, thread_data, thread_id, accountable,email_message_status, connection_type)
+      thread_data.messages.each do |thread_message|
+        treat_message_payload(service, thread_message.payload, thread_id, thread_message.id, accountable, email_message_status, connection_type) if thread_message.label_ids.include?('INBOX')
+      end if thread_data.messages.present?
+    end
+
+    def self.treat_message_payload(service, message_payload, thread_id, message_id, accountable,email_message_status, connection_type)
+      message_headers = message_payload.headers
+      message_subject = message_headers&.select{|m_header| m_header.name == 'Subject'}&.first&.value
+      message_from = message_headers&.select{|m_header| m_header.name == 'From'}&.first&.value
+      message_to = message_headers&.select{|m_header| m_header.name == 'To'}&.first&.value
+      check_or_create_message(service, message_payload, thread_id, message_id, message_subject, accountable,email_message_status, connection_type, message_from, message_to)
+
+    end
+
+    def self.check_or_create_message(service, message_payload, thread_id, message_id, message_subject, accountable, email_message_status, connection_type, message_from, message_to)
+      connection = nil
+      local_exist = Message.where(accountable: accountable, thread_id: thread_id, mail_id: message_id).first
+      sent_message = Message.where(thread_id: thread_id).first
+
+      if sent_message
+        connection = sent_message.connections.joins(:connection_detail).where(organization_id: accountable.user.organization_id, connection_details: {value: message_from.scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)&.first}).last
+      end
+      connection = Connection.joins(:connection_detail).where(organization_id: accountable.user.organization_id, connection_details: {value: message_from.scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)&.first}).last unless connection
+
+      if connection.present?
+        if local_exist.blank?
+          message_datetime = message_payload.headers.select {|header| header.name == 'Date'}.first
+          if message_payload.parts.present?
+            first_message_part = message_payload.parts.select {|m_part| m_part.part_id == '1'}.first
+            local_message = accountable.messages.new(status_id: email_message_status&.id, body: first_message_part&.body&.data.present? ?  first_message_part.body.data : '' ,
+                                                     user_id: accountable&.user&.id, connection_type_id: connection_type&.id, subject: message_subject, organization_id: accountable&.user&.organization&.id, thread_id: thread_id,
+                                                     mail_id: message_id, message_datetime: message_datetime&.value)
+          else
+            local_message = accountable.messages.new(status_id: email_message_status&.id, body: message_payload.body.data.present? ?  message_payload.body.data : '',
+                                                     user_id: accountable&.user&.id, connection_type_id: connection_type&.id, subject: message_subject, organization_id: accountable&.user&.organization&.id, thread_id: thread_id,
+                                                     mail_id: message_id, message_datetime: message_datetime&.value)
+          end
+          if local_message.save
+            create_recipient(local_message, accountable, message_from, message_to, connection)
+          end
+        end
+      end
+    end
+
+    def self.create_recipient(local_message, accountable, message_from, message_to, connection)
+      Recipient.where(status_id: MessageStatus.inbox,connection_id: connection.id, message_id: local_message.id).first_or_create if local_message.present? && connection.present?
+    end
+
+    def self.fetch_messages(accountable)
+      email_message_status = MessageStatus&.inbox
+      connection_type = ConnectionType.where(name: 'email').first
+      account = accountable.account
+      refresh_token_if_necessary(account) if account&.token_expires_at.blank? || account&.token_expires_at < Time.now
+
+      client = Signet::OAuth2::Client.new(access_token: account.token)
+      service = Google::Apis::GmailV1::GmailService.new
+      service.authorization = client
+
+      list_of_labels = service.list_user_labels('me')&.labels
+      salesdoor_label = list_of_labels&.select {|label| label.name == 'Salesdoor'}
+      return [] if salesdoor_label.blank?
+      source_threads = service.list_user_threads('me', label_ids: salesdoor_label.collect(&:id))
+      debugger
+      if source_threads.present? && source_threads&.result_size_estimate > 0
+        treat_threads(source_threads, accountable, service, email_message_status, connection_type)
+      end
+    end
+
+    def self.parse_gmail_messages(messages_details)
+      messages_details
+    end
+
+    def names_get
+      names = data[:name].try(:split).to_a
+      [data[:given_name] || names.first, data[:family_name] || names.last]
+    end
+
+    def data_get
+      response = @client.get(DATA_URL, access_token: @access_token)
+      @data = JSON.parse(response.body).with_indifferent_access
+      @data.deep_merge!({refresh_token: @refresh_token,expiry: @expires_in})
+      @uid = @data[:id] ||= @data[:sub]
+
+      @data
+    end
+
+    def formatted_user_data
+      {
+        provider: 'google',
+        token: @access_token,
+        uid: @data['sub'],
+        first_name: @data['given_name'],
+        last_name: @data['family_name'],
+        email: @data['email'],
+        expiry: @data['expiry'],
+        refresh_token: @data['refresh_token']
+      }
+    end
+
+
+    def self.refresh_token_if_necessary(accountable)
+      client = Signet::OAuth2::Client.new({client_id: GmailClientId, client_secret: GmailClientSecret, token_credential_uri: TOKEN_CREDENTIAL_URI, refresh_token: accountable&.refresh_token, grant_type: 'refresh_token'})
+      if client && client.refresh_token.present?
+        refreshed_token = client.refresh!
+        accountable.update(token: refreshed_token['access_token'], token_expires_at: Time.now + (refreshed_token['expires_in'].present? ? (refreshed_token['expires_in'] / 60)&.minutes : 1.minute))
+      else
+        puts("DAMN - DIDN'T WORK!")
+      end
+    end
+
+    def self.current_user
+      User.current_user
+    end
+
+    def current_user
+      Oauth::GoogleSource.current_user
+    end
+
+    def self.file_permission(account, file_id)
+      drive_service = Google::Apis::DriveV3::DriveService.new
+      refresh_token_if_necessary(account) if account&.token_expires_at.blank? || account&.token_expires_at < Time.now
+      token = account.token
+      client = Signet::OAuth2::Client.new(access_token: token)
+      drive_service.authorization = client
+      permission = Google::Apis::DriveV3::Permission.new role: :reader,type: :anyone
+      response =  drive_service.create_permission file_id,permission
+      shareable_link =  "https://drive.google.com/file/d/#{file_id}/view"
+    end
+
+    def self.get_google_contacts(account)
+      next_page_token = nil
+      service = Google::Apis::PeopleV1::PeopleService.new
+      refresh_token_if_necessary(account) if account&.token_expires_at.blank? || account&.token_expires_at < Time.now
+      token = account.token
+      client = Signet::OAuth2::Client.new(access_token: token)
+      service.authorization = client
+      response = []
+      result = []
+
+      begin
+        current_response = service.list_person_connections('people/me', page_size: 2000, page_token: next_page_token, request_mask_include_field: "person.names,person.Addresses,person.occupations,person.urls,person.EmailAddresses,person.phoneNumbers,person.organizations,person.occupations")
+        response = response.push(current_response.connections)
+        next_page_token = current_response.next_page_token
+      end while next_page_token
+
+      response&.flatten!
+      response&.each do |resp|
+        json_response = JSON.parse resp&.to_json if resp.present?
+        result.push(json_response) if json_response.present?
+      end
+
+      return result
+    end
+
+  end
+end
+
