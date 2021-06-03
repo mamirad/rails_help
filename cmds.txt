@@ -1,5 +1,6 @@
 where we set env variable
 sudo nano ~/.profile
+IGNORE_MAILBOX=true RAILS_ENV=local_production rails c
 
 
 set host
